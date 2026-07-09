@@ -1,8 +1,24 @@
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { AppPage } from './pages/AppPage'
+import { SignInPage } from './pages/SignInPage'
+import { SignUpPage } from './pages/SignUpPage'
+import { ProtectedRoute } from './routes/ProtectedRoute'
+
 function App() {
   return (
-    <main className="app-shell">
-      <h1>EasyGenerator Auth</h1>
-    </main>
+    <Routes>
+      <Route path="/signup" element={<SignUpPage />} />
+      <Route path="/signin" element={<SignInPage />} />
+      <Route
+        path="/app"
+        element={
+          <ProtectedRoute>
+            <AppPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/signin" replace />} />
+    </Routes>
   )
 }
 
