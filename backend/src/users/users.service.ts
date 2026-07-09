@@ -50,9 +50,7 @@ export class UsersService {
   }
 
   async setRefreshTokenHash(userId: string, refreshTokenHash: string) {
-    await this.userModel
-      .findByIdAndUpdate(userId, { refreshTokenHash }, { new: false })
-      .exec();
+    await this.userModel.findByIdAndUpdate(userId, { refreshTokenHash }).exec();
   }
 
   async clearRefreshTokenHash(userId: string) {

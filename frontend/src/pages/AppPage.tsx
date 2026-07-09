@@ -38,7 +38,7 @@ export function AppPage() {
         <div>
           <p className="eyebrow">Application</p>
           <h1>{message}</h1>
-          {user && <p className="muted">Signed in as {user.email}</p>}
+          {user && <p className="muted">Signed in as {user.name}</p>}
           {error && <p className="form-error">{error}</p>}
         </div>
 

@@ -6,6 +6,7 @@ export interface AuthContextValue {
   accessToken: string | null
   user: AuthUser | null
   isAuthenticated: boolean
+  isLoading: boolean
   signin: (values: SignInFormValues) => Promise<void>
   signup: (values: SignUpFormValues) => Promise<void>
   logout: () => Promise<void>

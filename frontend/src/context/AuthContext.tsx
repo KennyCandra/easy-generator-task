@@ -3,6 +3,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 import {
@@ -17,10 +18,12 @@ import type { SignInFormValues, SignUpFormValues } from '../schemas/auth.schema'
 import { AuthContext, type AuthContextValue } from './auth-context'
 
 export function AuthProvider({ children }: PropsWithChildren) {
+  const initialAccessToken = useRef(getStoredAccessToken())
   const [accessTokenState, setAccessTokenState] = useState<string | null>(
-    getStoredAccessToken(),
+    initialAccessToken.current,
   )
   const [user, setUser] = useState<AuthUser | null>(null)
+  const [isLoading, setIsLoading] = useState(Boolean(initialAccessToken.current))
 
   const clearSession = useCallback(() => {
     setAccessToken(null)
@@ -37,6 +40,38 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setAccessTokenState(response.accessToken)
     setUser(response.user)
   }, [])
+
+  useEffect(() => {
+    let isMounted = true
+
+    if (!initialAccessToken.current) {
+      return () => {
+        isMounted = false
+      }
+    }
+
+    apiClient
+      .post<AuthResponse>('/auth/refresh')
+      .then(({ data }) => {
+        if (isMounted) {
+          applyAuthResponse(data)
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          clearSession()
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [applyAuthResponse, clearSession])
 
   const signup = useCallback(
     async (values: SignUpFormValues) => {
@@ -67,11 +102,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       accessToken: accessTokenState,
       user,
       isAuthenticated: Boolean(accessTokenState),
+      isLoading,
       signin,
       signup,
       logout,
     }),
-    [accessTokenState, logout, signin, signup, user],
+    [accessTokenState, isLoading, logout, signin, signup, user],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
