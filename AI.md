@@ -26,4 +26,4 @@ AI assistance was used as a development accelerator for scaffolding, implementat
 
 ## Verification
 
-The implementation was checked with backend and frontend build commands, backend ESLint, and frontend Oxlint, along with manual browser testing against a live MongoDB connection signup, signin, protected route access, and logout all verified end-to-end.
+The implementation was checked with backend and frontend build commands, backend ESLint, backend e2e tests, and frontend Oxlint, along with manual browser testing against a live MongoDB connection signup, signin, protected route access, and logout all verified end-to-end.

@@ -111,6 +111,7 @@ The frontend validates these rules live while typing, and the backend enforces t
 cd backend
 npm run build
 npx eslint "src/**/*.ts"
+npm run test:e2e
 ```
 
 ```bash
